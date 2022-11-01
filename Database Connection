@@ -1,0 +1,38 @@
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+public class DBConnection {
+public static Connection getConnection() throws SQLException {
+//static yoktu basta
+Connection con =
+DriverManager.getConnection("jdbc:mysql://localhost:3306/patient","root","162972");
+return con;
+}
+public void newPatient(Patient pat) throws SQLException{
+String query = "insert into patient values (?,?,?,?,?,?,?,?,?)";
+PreparedStatement ps = getConnection().prepareStatement(query);
+ps.setInt(1, pat.idpatient);
+ps.setString(2, pat.name);
+ps.setString(3, pat.surname);
+ps.setInt(4, pat.contact);
+ps.setInt(5, pat.age);
+ps.setString(6, pat.gender);
+ps.setString(7, pat.blood);
+ps.setString(8, pat.service);
+ps.setString(9, pat.info);
+ps.executeUpdate();
+}
+public ResultSet getResultSet() throws SQLException{
+Statement st = getConnection().createStatement();
+ResultSet res = st.executeQuery("select * from patient");
+return res;
+}
+public void deletePat(Object idpatient) throws SQLException{
+int id = Integer.parseInt(idpatient.toString());
+Statement st = getConnection().createStatement();
+st.executeUpdate("delete from patient where idpatient ='"+id+"'");
+}
+}
